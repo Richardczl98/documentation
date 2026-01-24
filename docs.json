@@ -2,6 +2,11 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "SGLang Cookbook",
+  "seo": {
+    "metatags": {
+      "google-site-verification": "kCWV9NurbBjOxsoJKnpZhEjFqAUVBRUxdAgY8Qovio8"
+    }
+  },
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
