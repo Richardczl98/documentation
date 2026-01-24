@@ -1,43 +1,197 @@
-# Mintlify Starter Kit
+# SGLang Cookbook
 
-Use the starter kit to get your docs deployed and ready to customize.
+<div style={{display: 'flex', gap: '8px'}}>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License" /></a>
+  <a href="https://github.com/sgl-project/sgl-cookbook/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" /></a>
+</div>
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+## 🎯 What You'll Find Here
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+This cookbook aggregates battle-tested SGLang recipes covering:
 
-## Development
+- **Models**: Mainstream LLMs and Vision-Language Models (VLMs)
+- **Use Cases**: Inference serving, deployment strategies, multimodal applications
+- **Hardware**: GPU and CPU configurations, optimization for different accelerators
+- **Best Practices**: Configuration templates, performance tuning, troubleshooting guides
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+Each recipe provides step-by-step instructions to help you quickly implement SGLang solutions for your specific requirements.
 
+## Guides
+
+### Autoregressive Models
+
+#### Qwen
+
+- [X] [Qwen3](./autoregressive/Qwen/Qwen3)
+- [X] [Qwen3-Next](./autoregressive/Qwen/Qwen3-Next)
+- [X] [Qwen3-VL](./autoregressive/Qwen/Qwen3-VL)
+- [X] [Qwen3-Coder-480B-A35B](./autoregressive/Qwen/Qwen3-Coder-480B-A35B)
+- [X] [Qwen2.5-VL](./autoregressive/Qwen/Qwen2.5-VL)
+
+#### DeepSeek
+
+- [X] [DeepSeek-V3.2](./autoregressive/DeepSeek/DeepSeek-V3_2)
+- [X] [DeepSeek-V3.1](./autoregressive/DeepSeek/DeepSeek-V3_1)
+- [X] [DeepSeek-V3](./autoregressive/DeepSeek/DeepSeek-V3)
+- [X] [DeepSeek-R1](./autoregressive/DeepSeek/DeepSeek-R1)
+- [X] [DeepSeek-OCR](./autoregressive/DeepSeek/DeepSeek-OCR)
+
+#### Llama
+
+- [ ] [Llama4-Scout](./autoregressive/Llama/Llama4-Scout)
+- [X] [Llama3.3-70B](./autoregressive/Llama/Llama3.3-70B)
+- [X] [Llama3.1](./autoregressive/Llama/Llama3.1)
+
+#### GLM
+
+- [ ] [GLM-Glyph](./autoregressive/GLM/GLM-Glyph)
+- [X] [GLM-4.5](./autoregressive/GLM/GLM-4.5)
+- [X] [GLM-4.5V](./autoregressive/GLM/GLM-4.5V)
+- [X] [GLM-4.6](./autoregressive/GLM/GLM-4.6)
+- [X] [GLM-4.6V](./autoregressive/GLM/GLM-4.6V)
+- [X] [GLM-4.7](./autoregressive/GLM/GLM-4.7)
+- [X] [GLM-4.7-Flash](./autoregressive/GLM/GLM-4.7-Flash) <span style={{backgroundColor: '#10b981', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', marginLeft: '8px'}}>NEW</span>
+
+#### OpenAI
+
+- [X] [gpt-oss](./autoregressive/OpenAI/GPT-OSS)
+
+#### Moonshotai
+
+- [X] [Kimi-K2](./autoregressive/Moonshotai/Kimi-K2)
+- [ ] [Kimi-Linear](./autoregressive/Moonshotai/Kimi-Linear)
+
+#### MiniMax
+
+- [ ] [MiniMax-M2](./autoregressive/MiniMax/MiniMax-M2)
+
+#### NVIDIA
+
+- [X] [Nemotron-Nano-3-30B-A3B](./autoregressive/NVIDIA/Nemotron3-Nano)
+
+#### Ernie
+
+- [ ] [Ernie4.5](./autoregressive/Ernie/Ernie4.5)
+- [ ] [Ernie4.5-VL](./autoregressive/Ernie/Ernie4.5-VL)
+
+#### InternVL
+
+- [ ] [InternVL3.5](./autoregressive/InternVL/InternVL3.5)
+
+#### InternLM
+
+- [ ] [Intern-S1](./autoregressive/InternLM/Intern-S1)
+
+#### Jina AI
+
+- [ ] [Jina-reranker-m0](./autoregressive/Jina/Jina-reranker-m0)
+
+#### Mistral
+
+- [ ] [Mistral-3](./autoregressive/Mistral/Mistral-3)
+- [X] [Devstral 2](./autoregressive/Mistral/Devstral-2)
+
+#### Xiaomi
+
+- [X] [MiMo-V2-Flash](./autoregressive/Xiaomi/MiMo-V2-Flash)
+
+#### FlashLabs
+
+- [X] [Chroma 1.0](./autoregressive/FlashLabs/Chroma1.0)<span style={{backgroundColor: '#10b981', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', marginLeft: '8px'}}>NEW</span>
+
+### Diffusion Models
+
+#### FLUX
+
+- [X] [FLUX](./diffusion/FLUX/FLUX)
+
+#### Qwen-Image
+
+- [ ] [Qwen-Image](./diffusion/Qwen-Image/Qwen-Image)
+- [X] [Qwen-Image-Edit](./diffusion/Qwen-Image/Qwen-Image-Edit)
+
+#### Wan
+
+- [ ] [Wan2.1](./diffusion/Wan/Wan2.1)
+- [X] [Wan2.2](./diffusion/Wan/Wan2.2)
+
+#### Z-Image
+
+- [ ] [Z-Image](./diffusion/Z-Image/Z-Image-Turbo)
+
+### Benchmarks
+
+- [X] [Diffusion Model Benchmark](./base/benchmarks/diffusion_model_benchmark)
+- [X] [LLM Benchmark](./base/benchmarks/autoregressive_model_benchmark)
+
+## Reference
+
+- [Server arguments](./base/reference/server_arguments) - Understanding all the arguments
+
+## 🚀 Quick Start
+
+1. Browse the recipe index above to find your model
+2. Follow the step-by-step instructions in each guide
+3. Adapt configurations to your specific hardware and requirements
+4. Join our community to share feedback and improvements
+
+## 🤝 Contributing
+
+We believe the best documentation comes from practitioners. Whether you've optimized SGLang for a specific model, solved a tricky deployment challenge, or discovered performance improvements, we encourage you to contribute your recipes!
+
+**Ways to contribute:**
+
+- Add a new recipe for a model not yet covered
+- Improve existing recipes with additional tips or configurations
+- Report issues or suggest enhancements
+- Share your production deployment experiences
+
+**To contribute:**
+
+```shell
+# Fork the repo and clone locally
+git clone https://github.com/YOUR_USERNAME/sglang-cookbook.git
+cd sglang-cookbook
+
+# Create a new branch
+git checkout -b add-my-recipe
+
+# Add your recipe following the template in DeepSeek-V3.2
+# Submit a PR!
 ```
+
+## 🛠️ Local Development
+
+### Prerequisites
+
+- Node.js >= 18.0
+- [Mintlify CLI](https://www.mintlify.com/docs/quickstart)
+
+### Setup and Run
+
+Install the Mintlify CLI and start the development server:
+
+```shell
+# Install Mintlify CLI globally
 npm i -g mint
-```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
+# Start development server (hot reload enabled)
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+The site will automatically open in your browser at `http://localhost:3000`.
 
-## Publishing changes
+## 📖 Resources
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+- [SGLang GitHub](https://github.com/sgl-project/sglang)
+- [SGLang Documentation](https://sgl-project.github.io)
+- [Community Slack/Discord](https://discord.gg/MpEEuAeb)
 
-## Need help?
+## 📄 License
 
-### Troubleshooting
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/sgl-project/sgl-cookbook/blob/main/LICENSE) file for details.
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+---
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+**Let's build this resource together!** 🚀 Star the repo and contribute your recipes to help the SGLang community grow.
