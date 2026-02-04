@@ -1,56 +1,37 @@
 ---
-title: DeepSeek-R1
-description: Deploy DeepSeek-R1 reasoning model with SGLang - advanced step-by-step reasoning with FP8/FP4 quantization for NVIDIA and AMD GPUs.
+title: DeepSeek-V3.1
+metatags:
+    description: "Deploy DeepSeek-V3.1 MoE model with SGLang - hybrid reasoning, improved tool calling, and agentic behavior for complex multi-step tasks."
 ---
 
 ## 1. Model Introduction
 
-[DeepSeek-R1](https://github.com/deepseek-ai/DeepSeek-R1) is DeepSeek's advanced reasoning model that combines powerful language understanding with step-by-step reasoning capabilities. The model is available in multiple quantization formats optimized for different hardware platforms.
+[DeepSeek V3.1](https://huggingface.co/deepseek-ai/DeepSeek-V3.1) is an advanced Mixture-of-Experts (MoE) large language model developed by DeepSeek, representing a major capability and usability upgrade over DeepSeek V3. As a refined iteration in the DeepSeek V3 family, DeepSeek V3.1 introduces a hybrid reasoning paradigm that supports both fast non-thinking responses and explicit multi-step reasoning, alongside significantly improved tool calling and agentic behavior. The model demonstrates strong performance across reasoning, mathematics, coding, long-context understanding, and real-world agent workflows, benefiting from continued training, alignment optimization, and inference-time refinements. DeepSeek V3.1 is designed to serve as a robust general-purpose foundation model, well suited for conversational AI, structured tool invocation, search-augmented generation, and complex multi-step tasks, while maintaining high efficiency through its sparse MoE architecture.
 
-**Key Features:**
+**[DeepSeek-V3.1-Terminus](https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus)** is an experimental version designed for general conversations and long-context processing. It features hybrid thinking capabilities, allowing you to toggle between "Think" mode for deliberate reasoning and "Non-Think" mode for faster responses. Recommended for general conversations, long-context processing, and experimental use cases.
 
-- **Advanced Reasoning**: Built-in reasoning capabilities for complex problem-solving
-- **Multiple Quantizations**: FP8 and FP4 variants for different performance/memory trade-offs
-- **Hardware Optimization**: Specifically tuned for NVIDIA B200 (Blackwell) and H200 (Hopper) GPUs, and AMD MI300X GPUs
-- **High Performance**: Optimized for both throughput and latency scenarios
 
-**Available Models:**
-
-- **FP8 (8-bit quantized)**: [deepseek-ai/DeepSeek-R1-0528](https://huggingface.co/deepseek-ai/DeepSeek-R1-0528) - Recommended for H200 and MI300X
-- **FP4 (4-bit quantized)**: [nvidia/DeepSeek-R1-0528-FP4-v2](https://huggingface.co/nvidia/DeepSeek-R1-0528-FP4-v2) - Recommended for B200
-
-**License:**
-To use DeepSeek-R1, you must agree to DeepSeek's Community License. See [LICENSE](https://huggingface.co/deepseek-ai/DeepSeek-R1-0528/blob/main/LICENSE) for details.
-
-For more details, please refer to the [official DeepSeek-R1 repository](https://github.com/deepseek-ai/DeepSeek-R1).
 
 ## 2. SGLang Installation
+
+SGLang offers multiple installation methods. You can choose the most suitable installation method based on your hardware platform and requirements.
 
 Please refer to the [official SGLang installation guide](https://docs.sglang.ai/get_started/install.html) for installation instructions.
 
 ## 3. Model Deployment
 
-This section provides deployment configurations optimized for different hardware platforms and use cases.
+This section provides a progressive guide from quick deployment to performance optimization, suitable for users at different levels.
 
 ### 3.1 Basic Configuration
 
-**Interactive Command Generator**: Use the configuration selector below to automatically generate a basic deployment command for your hardware platform, quantization method, and deployment strategy.
+**Interactive Command Generator**: Use the configuration selector below to automatically generate the appropriate deployment command for your hardware platform, model variant, deployment strategy, and thinking capabilities.
 
-import { DeepSeekR1BasicDeployment } from '/src/snippets/autoregressive/deepseek-r1-basic-deployment.jsx';
+import { DeepSeekV31Deployment } from "/src/snippets/autoregressive/deepseek-v31-deployment.jsx";
 
-<DeepSeekR1BasicDeployment />
+<DeepSeekV31Deployment />
 
-### 3.2 Optimal Configurations
-
-Pareto-optimal configurations for B200 and H200 hardware.
-
-import { DeepSeekR1AdvancedDeployment } from '/src/snippets/autoregressive/deepseek-r1-advanced-deployment.jsx';
-
-<DeepSeekR1AdvancedDeployment />
-
-### 3.3 Configuration Tips
-
-For more detailed configuration tips and advanced tuning, please refer to [DeepSeek V3/V3.1/R1 Usage](https://docs.sglang.io/basic_usage/deepseek_v3.html).
+### 3.2 Configuration Tips
+For more detailed configuration tips, please refer to [DeepSeek V3/V3.1/R1 Usage](https://docs.sglang.io/basic_usage/deepseek_v3.html).
 
 ## 4. Model Invocation
 
@@ -58,19 +39,21 @@ For more detailed configuration tips and advanced tuning, please refer to [DeepS
 
 For basic API usage and request examples, please refer to:
 
-- [SGLang Basic Usage Guide](https://docs.sglang.ai/basic_usage/send_request.html)
+- [Basic API Usage](https://docs.sglang.ai/get_started/quick_start.html)
 
 ### 4.2 Advanced Usage
 
 #### 4.2.1 Reasoning Parser
 
-DeepSeek-R1 supports advanced reasoning capabilities with built-in thinking process. Enable the reasoning parser during deployment to separate the thinking and content sections:
+DeepSeek-V3.1 supports reasoning mode. Enable the reasoning parser during deployment to separate the thinking and content sections:
 
 ```shell
 python -m sglang.launch_server \
-  --model-path deepseek-ai/DeepSeek-R1-0528 \
-  --reasoning-parser deepseek-r1 \
-  --tp 8
+  --model deepseek-ai/DeepSeek-V3.1-Terminus \
+  --reasoning-parser deepseek-v3 \
+  --tp 8 \
+  --host 0.0.0.0 \
+  --port 8000
 ```
 
 **Streaming with Thinking Process:**
@@ -79,18 +62,19 @@ python -m sglang.launch_server \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:30000/v1",
+    base_url="http://localhost:8000/v1",
     api_key="EMPTY"
 )
 
 # Enable streaming to see the thinking process in real-time
 response = client.chat.completions.create(
-    model="deepseek-ai/DeepSeek-R1-0528",
+    model="deepseek-ai/DeepSeek-V3.1-Terminus",
     messages=[
         {"role": "user", "content": "Solve this problem step by step: What is 15% of 240?"}
     ],
     temperature=0.7,
     max_tokens=2048,
+    extra_body = {"chat_template_kwargs": {"thinking": True}},
     stream=True
 )
 
@@ -124,31 +108,62 @@ print()
 
 **Output Example:**
 
-```text
+```
 =============== Thinking =================
-To solve this problem, I need to calculate 15% of 240.
-Step 1: Convert 15% to decimal: 15% = 0.15
-Step 2: Multiply 240 by 0.15
-Step 3: 240 × 0.15 = 36
-=============== Content =================
+First, the problem is asking for 15% of 240. Percent means per hundred, so 15% is the same as 15 out of 100, or 15/100.
 
-The answer is 36. To find 15% of 240, we multiply 240 by 0.15, which equals 36.
+To find a percentage of a number, I can multiply the number by the percentage expressed as a decimal. So, I need to convert 15% to a decimal. To do that, I divide 15 by 100, which gives me 0.15.
+
+Now, I multiply 0.15 by 240. So, the calculation is 0.15 × 240.
+
+I can compute this step by step. First, I know that 15% of 100 is 15, but since 240 is larger, I need to adjust. Alternatively, I can think of 10% of 240, which is easy because 10% is just 240 divided by 10, which is 24. Then, 5% is half of 10%, so half of 24 is 12. Therefore, 15% is 10% plus 5%, so 24 plus 12, which equals 36.
+
+I should also do the multiplication to confirm. 0.15 × 240. I can break it down: 0.15 × 200 = 30, and 0.15 × 40 = 6, so 30 + 6 = 36. Same answer.
+
+So, 15% of 240 is 36.
+
+The problem says "step by step," so I should present it clearly.
+=============== Content =================
+To find 15% of 240, follow these steps:
+
+1. Understand that "percent" means "per hundred," so 15% is equivalent to \( \frac{15}{100} \).
+2. Convert 15% to a decimal by dividing by 100: \( 15\% = \frac{15}{100} = 0.15 \).
+3. Multiply the decimal by 240: \( 0.15 \times 240 \).
+4. Perform the multiplication:
+   - \( 0.15 \times 200 = 30 \)
+   - \( 0.15 \times 40 = 6 \)
+   - Add the results: \( 30 + 6 = 36 \).
+
+Alternatively, you can find 15% by breaking it into parts:
+- 10% of 240 is \( \frac{10}{100} \times 240 = 0.10 \times 240 = 24 \).
+- 5% of 240 is half of 10%, so \( \frac{24}{2} = 12 \).
+- Add 10% and 5%: \( 24 + 12 = 36 \).
+
+Thus, 15% of 240 is 36.
 ```
 
 **Note:** The reasoning parser captures the model's step-by-step thinking process, allowing you to see how the model arrives at its conclusions.
 
 #### 4.2.2 Tool Calling
 
-DeepSeek-R1 supports tool calling capabilities. Enable the tool call parser:
+DeepSeek-V3.1 and DeepSeek-V3.1-Terminus support tool calling capabilities. Enable the tool call parser:
+
+**Note:** DeepSeek-V3.1-Speciale does **NOT** support tool calling. It is designed exclusively for deep reasoning tasks.
+
+**Deployment Command:**
 
 ```shell
 python -m sglang.launch_server \
-  --model-path deepseek-ai/DeepSeek-R1-0528 \
-  --reasoning-parser deepseek-r1 \
-  --tool-call-parser deepseekv3 \
-  --chat-template examples/chat_template/tool_chat_template_deepseekr1.jinja \
-  --tp 8
+  --model deepseek-ai/DeepSeek-V3.1-Terminus \
+  --tool-call-parser deepseekv31 \
+  --reasoning-parser deepseek-v3 \
+  --chat-template ./examples/chat_template/tool_chat_template_deepseekv31.jinja \
+  --tp 8 \
+  --host 0.0.0.0 \
+  --port 8000
 ```
+
+For DeepSeek-V3.1, use `--tool-call-parser deepseekv31` as well.
 
 **Python Example (with Thinking Process):**
 
@@ -156,7 +171,7 @@ python -m sglang.launch_server \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:30000/v1",
+    base_url="http://localhost:8000/v1",
     api_key="EMPTY"
 )
 
@@ -188,11 +203,12 @@ tools = [
 
 # Make request with streaming to see thinking process
 response = client.chat.completions.create(
-    model="deepseek-ai/DeepSeek-R1-0528",
+    model="deepseek-ai/DeepSeek-V3.1-Terminus",
     messages=[
         {"role": "user", "content": "What's the weather in Beijing?"}
     ],
     tools=tools,
+    extra_body = {"chat_template_kwargs": {"thinking": True}},
     temperature=0.7,
     stream=True
 )
@@ -200,6 +216,7 @@ response = client.chat.completions.create(
 # Process streaming response
 thinking_started = False
 has_thinking = False
+tool_calls_accumulator = {}
 
 for chunk in response:
     if chunk.choices and len(chunk.choices) > 0:
@@ -213,37 +230,52 @@ for chunk in response:
             has_thinking = True
             print(delta.reasoning_content, end="", flush=True)
 
-        # Print tool calls
+        # Accumulate tool calls
         if hasattr(delta, 'tool_calls') and delta.tool_calls:
             # Close thinking section if needed
             if has_thinking and thinking_started:
-                print("\n=============== Content =================", flush=True)
+                print("\n=============== Content =================\n", flush=True)
                 thinking_started = False
 
             for tool_call in delta.tool_calls:
+                index = tool_call.index
+                if index not in tool_calls_accumulator:
+                    tool_calls_accumulator[index] = {
+                        'name': None,
+                        'arguments': ''
+                    }
+
                 if tool_call.function:
-                    print(f"🔧 Tool Call: {tool_call.function.name}")
-                    print(f"   Arguments: {tool_call.function.arguments}")
+                    if tool_call.function.name:
+                        tool_calls_accumulator[index]['name'] = tool_call.function.name
+                    if tool_call.function.arguments:
+                        tool_calls_accumulator[index]['arguments'] += tool_call.function.arguments
 
         # Print content
         if delta.content:
             print(delta.content, end="", flush=True)
+
+# Print accumulated tool calls
+for index, tool_call in sorted(tool_calls_accumulator.items()):
+    print(f"🔧 Tool Call: {tool_call['name']}")
+    print(f"   Arguments: {tool_call['arguments']}")
 
 print()
 ```
 
 **Output Example:**
 
-```text
+```
 =============== Thinking =================
-The user is asking about the weather in Beijing. I need to use the get_weather function to retrieve this information.
-I should call the function with location="Beijing".
+Hmm, the user is asking for the weather in Beijing. This is a straightforward request that matches exactly what the weather tool can provide.
+
+I need to call the get_weather function with Beijing as the location parameter. The user didn't specify a temperature unit, so I'll default to Celsius since that's commonly used in most parts of the world.
+
+The tool call format needs to be precise - just the city name and unit selection. Once I get the weather data back, I'll present it clearly to the user.I'll check the weather in Beijing for you.
 =============== Content =================
 
 🔧 Tool Call: get_weather
-   Arguments:
-🔧 Tool Call: None
-   Arguments: {"location": "Beijing"}
+   Arguments: {"location": "Beijing", "unit": "celsius"}
 ```
 
 **Note:**
@@ -253,6 +285,8 @@ I should call the function with location="Beijing".
 - You can then execute the function and send the result back to continue the conversation
 
 **Handling Tool Call Results:**
+
+Please attach the code blocks below to the previous Python script.
 
 ```python
 # After getting the tool call, execute the function
@@ -283,27 +317,25 @@ messages = [
 ]
 
 final_response = client.chat.completions.create(
-    model="deepseek-ai/DeepSeek-R1-0528",
+    model="deepseek-ai/DeepSeek-V3.1-Terminus",
     messages=messages,
     temperature=0.7
 )
 
 print(final_response.choices[0].message.content)
-# Output: "The weather in Beijing is currently 22°C and sunny."
+# Output: "Currently, it is **22°C and sunny** in Beijing."
 ```
 
 ## 5. Benchmark
-
-This section uses **industry-standard configurations** for comparable benchmark results.
 
 ### 5.1 Speed Benchmark
 
 **Test Environment:**
 
-- Hardware: B200 GPU (8x)
-- Model: DeepSeek-R1-0528
+- Hardware: AMD MI300X GPU (8x)
+- Model: DeepSeek-V3.1-Terminus
 - Tensor Parallelism: 8
-- SGLang Version: 0.5.6.post1
+- sglang version: 0.5.7
 
 **Benchmark Methodology:**
 
@@ -345,7 +377,7 @@ For each concurrency level, configure `num_prompts` to simulate realistic user l
 
 ```bash
 python -m sglang.launch_server \
-  --model-path deepseek-ai/DeepSeek-R1-0528 \
+  --model-path deepseek-ai/DeepSeek-V3.1 \
   --tp 8
 ```
 
@@ -354,7 +386,7 @@ python -m sglang.launch_server \
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 1000 \
@@ -369,36 +401,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 1
 Successful requests:                     10
-Benchmark duration (s):                  40.00
+Benchmark duration (s):                  106.24
 Total input tokens:                      6101
 Total input text tokens:                 6101
 Total input vision tokens:               0
-Total generated tokens:                  4210
-Total generated tokens (retokenized):    4205
-Request throughput (req/s):              0.25
-Input token throughput (tok/s):          152.52
-Output token throughput (tok/s):         105.24
-Peak output token throughput (tok/s):    110.00
+Total generated tokens:                  4220
+Total generated tokens (retokenized):    4201
+Request throughput (req/s):              0.09
+Input token throughput (tok/s):          57.43
+Output token throughput (tok/s):         39.72
+Peak output token throughput (tok/s):    43.00
 Peak concurrent requests:                2
-Total token throughput (tok/s):          257.76
+Total token throughput (tok/s):          97.15
 Concurrency:                             1.00
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   3998.40
-Median E2E Latency (ms):                 3207.53
+Mean E2E Latency (ms):                   10620.29
+Median E2E Latency (ms):                 8868.09
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          153.00
-Median TTFT (ms):                        140.76
-P99 TTFT (ms):                           214.66
+Mean TTFT (ms):                          557.85
+Median TTFT (ms):                        213.58
+P99 TTFT (ms):                           1625.28
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          9.16
-Median TPOT (ms):                        9.15
-P99 TPOT (ms):                           9.21
+Mean TPOT (ms):                          23.84
+Median TPOT (ms):                        23.90
+P99 TPOT (ms):                           24.03
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           9.16
-Median ITL (ms):                         9.15
-P95 ITL (ms):                            9.47
-P99 ITL (ms):                            9.63
-Max ITL (ms):                            15.45
+Mean ITL (ms):                           23.90
+Median ITL (ms):                         23.92
+P95 ITL (ms):                            24.15
+P99 ITL (ms):                            24.25
+Max ITL (ms):                            25.44
 ==================================================
 ```
 
@@ -407,7 +439,7 @@ Max ITL (ms):                            15.45
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 1000 \
@@ -422,36 +454,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 16
 Successful requests:                     80
-Benchmark duration (s):                  51.21
+Benchmark duration (s):                  107.71
 Total input tokens:                      39668
 Total input text tokens:                 39668
 Total input vision tokens:               0
-Total generated tokens:                  40725
-Total generated tokens (retokenized):    40458
-Request throughput (req/s):              1.56
-Input token throughput (tok/s):          774.66
-Output token throughput (tok/s):         795.30
-Peak output token throughput (tok/s):    1088.00
-Peak concurrent requests:                21
-Total token throughput (tok/s):          1569.96
-Concurrency:                             13.93
+Total generated tokens:                  40805
+Total generated tokens (retokenized):    40625
+Request throughput (req/s):              0.74
+Input token throughput (tok/s):          368.28
+Output token throughput (tok/s):         378.84
+Peak output token throughput (tok/s):    508.00
+Peak concurrent requests:                19
+Total token throughput (tok/s):          747.12
+Concurrency:                             13.72
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   8918.33
-Median E2E Latency (ms):                 9466.16
+Mean E2E Latency (ms):                   18473.65
+Median E2E Latency (ms):                 19558.42
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          273.51
-Median TTFT (ms):                        131.71
-P99 TTFT (ms):                           839.57
+Mean TTFT (ms):                          607.91
+Median TTFT (ms):                        191.32
+P99 TTFT (ms):                           2135.13
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          17.56
-Median TPOT (ms):                        17.46
-P99 TPOT (ms):                           28.68
+Mean TPOT (ms):                          35.50
+Median TPOT (ms):                        35.99
+P99 TPOT (ms):                           43.62
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           17.02
-Median ITL (ms):                         14.70
-P95 ITL (ms):                            16.41
-P99 ITL (ms):                            112.38
-Max ITL (ms):                            461.90
+Mean ITL (ms):                           35.10
+Median ITL (ms):                         32.18
+P95 ITL (ms):                            33.03
+P99 ITL (ms):                            159.99
+Max ITL (ms):                            453.99
 ==================================================
 ```
 
@@ -460,7 +492,7 @@ Max ITL (ms):                            461.90
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 1000 \
@@ -475,36 +507,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 100
 Successful requests:                     500
-Benchmark duration (s):                  110.46
+Benchmark duration (s):                  207.65
 Total input tokens:                      249831
 Total input text tokens:                 249831
 Total input vision tokens:               0
-Total generated tokens:                  252162
-Total generated tokens (retokenized):    251441
-Request throughput (req/s):              4.53
-Input token throughput (tok/s):          2261.80
-Output token throughput (tok/s):         2282.90
-Peak output token throughput (tok/s):    3900.00
-Peak concurrent requests:                109
-Total token throughput (tok/s):          4544.71
-Concurrency:                             92.26
+Total generated tokens:                  252662
+Total generated tokens (retokenized):    251238
+Request throughput (req/s):              2.41
+Input token throughput (tok/s):          1203.15
+Output token throughput (tok/s):         1216.79
+Peak output token throughput (tok/s):    2100.00
+Peak concurrent requests:                106
+Total token throughput (tok/s):          2419.94
+Concurrency:                             91.02
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   20380.71
-Median E2E Latency (ms):                 19391.65
+Mean E2E Latency (ms):                   37800.20
+Median E2E Latency (ms):                 35921.56
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          563.14
-Median TTFT (ms):                        147.62
-P99 TTFT (ms):                           2632.11
+Mean TTFT (ms):                          835.15
+Median TTFT (ms):                        236.88
+P99 TTFT (ms):                           2868.52
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          40.11
-Median TPOT (ms):                        41.98
-P99 TPOT (ms):                           50.10
+Mean TPOT (ms):                          73.33
+Median TPOT (ms):                        76.35
+P99 TPOT (ms):                           97.63
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           39.37
-Median ITL (ms):                         26.36
-P95 ITL (ms):                            98.16
-P99 ITL (ms):                            150.08
-Max ITL (ms):                            2052.85
+Mean ITL (ms):                           73.30
+Median ITL (ms):                         50.82
+P95 ITL (ms):                            180.67
+P99 ITL (ms):                            186.83
+Max ITL (ms):                            1661.39
 ==================================================
 ```
 
@@ -515,7 +547,7 @@ Max ITL (ms):                            2052.85
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 8000 \
@@ -530,36 +562,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 1
 Successful requests:                     10
-Benchmark duration (s):                  411.34
+Benchmark duration (s):                  1097.29
 Total input tokens:                      6101
 Total input text tokens:                 6101
 Total input vision tokens:               0
-Total generated tokens:                  44452
-Total generated tokens (retokenized):    44390
-Request throughput (req/s):              0.02
-Input token throughput (tok/s):          14.83
-Output token throughput (tok/s):         108.07
-Peak output token throughput (tok/s):    110.00
+Total generated tokens:                  44462
+Total generated tokens (retokenized):    44313
+Request throughput (req/s):              0.01
+Input token throughput (tok/s):          5.56
+Output token throughput (tok/s):         40.52
+Peak output token throughput (tok/s):    43.00
 Peak concurrent requests:                2
-Total token throughput (tok/s):          122.90
+Total token throughput (tok/s):          46.08
 Concurrency:                             1.00
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   41132.04
-Median E2E Latency (ms):                 44288.71
+Mean E2E Latency (ms):                   109725.52
+Median E2E Latency (ms):                 117748.67
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          125.76
-Median TTFT (ms):                        126.19
-P99 TTFT (ms):                           137.69
+Mean TTFT (ms):                          156.67
+Median TTFT (ms):                        156.19
+P99 TTFT (ms):                           159.87
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          9.21
-Median TPOT (ms):                        9.20
-P99 TPOT (ms):                           9.27
+Mean TPOT (ms):                          24.41
+Median TPOT (ms):                        24.51
+P99 TPOT (ms):                           24.96
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           9.23
-Median ITL (ms):                         9.22
-P95 ITL (ms):                            9.64
-P99 ITL (ms):                            9.86
-Max ITL (ms):                            15.18
+Mean ITL (ms):                           24.65
+Median ITL (ms):                         24.58
+P95 ITL (ms):                            25.68
+P99 ITL (ms):                            25.93
+Max ITL (ms):                            29.80
 ==================================================
 ```
 
@@ -568,7 +600,7 @@ Max ITL (ms):                            15.18
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 8000 \
@@ -583,36 +615,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 16
 Successful requests:                     80
-Benchmark duration (s):                  348.93
+Benchmark duration (s):                  775.02
 Total input tokens:                      39668
 Total input text tokens:                 39668
 Total input vision tokens:               0
-Total generated tokens:                  318226
-Total generated tokens (retokenized):    317630
-Request throughput (req/s):              0.23
-Input token throughput (tok/s):          113.69
-Output token throughput (tok/s):         912.02
-Peak output token throughput (tok/s):    1088.00
-Peak concurrent requests:                19
-Total token throughput (tok/s):          1025.70
-Concurrency:                             14.07
+Total generated tokens:                  318306
+Total generated tokens (retokenized):    317426
+Request throughput (req/s):              0.10
+Input token throughput (tok/s):          51.18
+Output token throughput (tok/s):         410.70
+Peak output token throughput (tok/s):    512.00
+Peak concurrent requests:                18
+Total token throughput (tok/s):          461.89
+Concurrency:                             13.86
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   61360.70
-Median E2E Latency (ms):                 62071.20
+Mean E2E Latency (ms):                   134236.65
+Median E2E Latency (ms):                 135181.28
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          176.02
-Median TTFT (ms):                        153.75
-P99 TTFT (ms):                           268.44
+Mean TTFT (ms):                          214.35
+Median TTFT (ms):                        194.12
+P99 TTFT (ms):                           300.27
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          15.42
-Median TPOT (ms):                        15.59
-P99 TPOT (ms):                           16.07
+Mean TPOT (ms):                          33.72
+Median TPOT (ms):                        34.00
+P99 TPOT (ms):                           34.75
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           15.39
-Median ITL (ms):                         15.17
-P95 ITL (ms):                            16.62
-P99 ITL (ms):                            18.13
-Max ITL (ms):                            226.59
+Mean ITL (ms):                           33.69
+Median ITL (ms):                         33.71
+P95 ITL (ms):                            34.50
+P99 ITL (ms):                            34.92
+Max ITL (ms):                            164.76
 ==================================================
 ```
 
@@ -621,7 +653,7 @@ Max ITL (ms):                            226.59
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 1000 \
   --random-output-len 8000 \
@@ -636,36 +668,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 64
 Successful requests:                     320
-Benchmark duration (s):                  589.31
+Benchmark duration (s):                  1231.97
 Total input tokens:                      158939
 Total input text tokens:                 158939
 Total input vision tokens:               0
-Total generated tokens:                  1300705
-Total generated tokens (retokenized):    1297658
-Request throughput (req/s):              0.54
-Input token throughput (tok/s):          269.70
-Output token throughput (tok/s):         2207.16
-Peak output token throughput (tok/s):    2944.00
-Peak concurrent requests:                68
-Total token throughput (tok/s):          2476.86
-Concurrency:                             57.03
+Total generated tokens:                  1301025
+Total generated tokens (retokenized):    1296845
+Request throughput (req/s):              0.26
+Input token throughput (tok/s):          129.01
+Output token throughput (tok/s):         1056.05
+Peak output token throughput (tok/s):    1472.00
+Peak concurrent requests:                67
+Total token throughput (tok/s):          1185.07
+Concurrency:                             56.17
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   105032.36
-Median E2E Latency (ms):                 108229.09
+Mean E2E Latency (ms):                   216256.25
+Median E2E Latency (ms):                 224192.84
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          223.91
-Median TTFT (ms):                        158.15
-P99 TTFT (ms):                           474.86
+Mean TTFT (ms):                          317.68
+Median TTFT (ms):                        235.28
+P99 TTFT (ms):                           649.39
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          25.94
-Median TPOT (ms):                        26.72
-P99 TPOT (ms):                           27.99
+Mean TPOT (ms):                          53.30
+Median TPOT (ms):                        55.10
+P99 TPOT (ms):                           56.58
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           25.79
-Median ITL (ms):                         25.37
-P95 ITL (ms):                            26.70
-P99 ITL (ms):                            105.49
-Max ITL (ms):                            237.91
+Mean ITL (ms):                           53.13
+Median ITL (ms):                         52.95
+P95 ITL (ms):                            56.23
+P99 ITL (ms):                            181.04
+Max ITL (ms):                            208.61
 ==================================================
 ```
 
@@ -676,7 +708,7 @@ Max ITL (ms):                            237.91
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 8000 \
   --random-output-len 1000 \
@@ -691,36 +723,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 1
 Successful requests:                     10
-Benchmark duration (s):                  40.65
+Benchmark duration (s):                  114.47
 Total input tokens:                      41941
 Total input text tokens:                 41941
 Total input vision tokens:               0
-Total generated tokens:                  4210
-Total generated tokens (retokenized):    4195
-Request throughput (req/s):              0.25
-Input token throughput (tok/s):          1031.65
-Output token throughput (tok/s):         103.56
-Peak output token throughput (tok/s):    110.00
+Total generated tokens:                  4220
+Total generated tokens (retokenized):    4194
+Request throughput (req/s):              0.09
+Input token throughput (tok/s):          366.39
+Output token throughput (tok/s):         36.87
+Peak output token throughput (tok/s):    42.00
 Peak concurrent requests:                2
-Total token throughput (tok/s):          1135.20
+Total token throughput (tok/s):          403.26
 Concurrency:                             1.00
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   4063.62
-Median E2E Latency (ms):                 3296.13
+Mean E2E Latency (ms):                   11442.86
+Median E2E Latency (ms):                 9508.87
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          165.91
-Median TTFT (ms):                        154.96
-P99 TTFT (ms):                           240.92
+Mean TTFT (ms):                          883.78
+Median TTFT (ms):                        481.38
+P99 TTFT (ms):                           2217.45
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          9.26
-Median TPOT (ms):                        9.27
-P99 TPOT (ms):                           9.42
+Mean TPOT (ms):                          24.93
+Median TPOT (ms):                        25.05
+P99 TPOT (ms):                           26.11
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           9.28
-Median ITL (ms):                         9.28
-P95 ITL (ms):                            9.66
-P99 ITL (ms):                            9.83
-Max ITL (ms):                            14.06
+Mean ITL (ms):                           25.08
+Median ITL (ms):                         25.08
+P95 ITL (ms):                            26.18
+P99 ITL (ms):                            26.28
+Max ITL (ms):                            27.41
 ==================================================
 ```
 
@@ -729,7 +761,7 @@ Max ITL (ms):                            14.06
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 8000 \
   --random-output-len 1000 \
@@ -744,36 +776,36 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 16
 Successful requests:                     80
-Benchmark duration (s):                  56.71
+Benchmark duration (s):                  162.33
 Total input tokens:                      300020
 Total input text tokens:                 300020
 Total input vision tokens:               0
-Total generated tokens:                  41589
-Total generated tokens (retokenized):    41490
-Request throughput (req/s):              1.41
-Input token throughput (tok/s):          5290.75
-Output token throughput (tok/s):         733.41
-Peak output token throughput (tok/s):    1024.00
-Peak concurrent requests:                20
-Total token throughput (tok/s):          6024.16
-Concurrency:                             14.25
+Total generated tokens:                  41669
+Total generated tokens (retokenized):    41443
+Request throughput (req/s):              0.49
+Input token throughput (tok/s):          1848.27
+Output token throughput (tok/s):         256.70
+Peak output token throughput (tok/s):    467.00
+Peak concurrent requests:                19
+Total token throughput (tok/s):          2104.97
+Concurrency:                             14.52
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   10098.99
-Median E2E Latency (ms):                 10623.46
+Mean E2E Latency (ms):                   29456.89
+Median E2E Latency (ms):                 27628.16
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          486.80
-Median TTFT (ms):                        189.59
-P99 TTFT (ms):                           2138.73
+Mean TTFT (ms):                          1784.30
+Median TTFT (ms):                        1347.21
+P99 TTFT (ms):                           5384.54
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          19.06
-Median TPOT (ms):                        19.23
-P99 TPOT (ms):                           30.69
+Mean TPOT (ms):                          53.65
+Median TPOT (ms):                        52.09
+P99 TPOT (ms):                           74.39
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           18.53
-Median ITL (ms):                         15.63
-P95 ITL (ms):                            16.64
-P99 ITL (ms):                            109.71
-Max ITL (ms):                            1471.36
+Mean ITL (ms):                           53.23
+Median ITL (ms):                         34.52
+P95 ITL (ms):                            35.81
+P99 ITL (ms):                            513.25
+Max ITL (ms):                            2865.73
 ==================================================
 ```
 
@@ -782,7 +814,7 @@ Max ITL (ms):                            1471.36
 ```bash
 python -m sglang.bench_serving \
   --backend sglang \
-  --model deepseek-ai/DeepSeek-R1-0528 \
+  --model deepseek-ai/DeepSeek-V3.1 \
   --dataset-name random \
   --random-input-len 8000 \
   --random-output-len 1000 \
@@ -797,36 +829,35 @@ Backend:                                 sglang
 Traffic request rate:                    inf
 Max request concurrency:                 64
 Successful requests:                     320
-Benchmark duration (s):                  115.55
+Benchmark duration (s):                  282.55
 Total input tokens:                      1273893
 Total input text tokens:                 1273893
 Total input vision tokens:               0
-Total generated tokens:                  169680
-Total generated tokens (retokenized):    169275
-Request throughput (req/s):              2.77
-Input token throughput (tok/s):          11024.93
-Output token throughput (tok/s):         1468.50
-Peak output token throughput (tok/s):    2254.00
-Peak concurrent requests:                70
-Total token throughput (tok/s):          12493.43
-Concurrency:                             59.45
+Total generated tokens:                  170000
+Total generated tokens (retokenized):   169081
+Request throughput (req/s):              1.13
+Input token throughput (tok/s):          4508.6
+Output token throughput (tok/s):         601.67
+Peak output token throughput (tok/s):   1216
+Peak concurrent requests:                68
+Total token throughput (tok/s):         5110.27
+Concurrency:                            59.81
 ----------------End-to-End Latency----------------
-Mean E2E Latency (ms):                   21465.98
-Median E2E Latency (ms):                 20686.26
+Mean E2E Latency (ms):                  52810.32
+Median E2E Latency (ms):                50981.81
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          913.93
-Median TTFT (ms):                        224.92
-P99 TTFT (ms):                           6257.83
+Mean TTFT (ms):                         786.69
+Median TTFT (ms):                       499.38
+P99 TTFT (ms):                          2925.98
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          39.93
-Median TPOT (ms):                        40.99
-P99 TPOT (ms):                           60.91
+Mean TPOT (ms):                         97.93
+Median TPOT (ms):                       103.45
+P99 TPOT (ms):                          157.84
 ---------------Inter-Token Latency----------------
-Mean ITL (ms):                           38.83
-Median ITL (ms):                         26.29
-P95 ITL (ms):                            113.81
-P99 ITL (ms):                            176.94
-Max ITL (ms):                            5521.53
+Mean ITL (ms):                          98.11
+Median ITL (ms):                        55.7
+P95 ITL (ms):                           240.71
+P99 ITL (ms):                          1114.36
 ==================================================
 ```
 
